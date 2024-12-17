@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p id="responseMessage" style="color: red;"></p>
+
+    <script>
+        const form = document.getElementById("loginForm");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const responseMessage = document.getElementById("responseMessage");
+
+            try {
+                const response = await fetch("/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    responseMessage.style.color = "green";
+                    responseMessage.textContent = "Login successful! Redirecting...";
+
+                    setTimeout(() => {
+                        window.location.href = "/get/notes"; // Redirect to /get/notes
+                    }, 1000);
+                } else {
+                    const errorMessage = await response.text();
+                    responseMessage.style.color = "red";
+                    responseMessage.textContent = errorMessage;
+                }
+            } catch (error) {
+                responseMessage.textContent = "Something went wrong!";
+            }
+        });
+    </script>
+</body>
+</html>

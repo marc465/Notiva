@@ -21,7 +21,7 @@
   <key>CFBundleVersion</key>
   <string>1.0</string>
   <key>NSMicrophoneUsageDescription</key>
-  <string>To continue please give permission for using microphone</string>
+  <string>This app requires microphone access to record audio notes</string>
   <key>MinimumOSVersion</key>
   <string>12.0</string>
 </dict>
