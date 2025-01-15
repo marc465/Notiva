@@ -24,9 +24,8 @@ public class Note{
     @Column(name = "audio", nullable = false)
     private String audio;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "time_of_creation", nullable = false)
     private Timestamp time_of_creation;
@@ -63,8 +62,8 @@ public class Note{
         return audio;
     }
     
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
     public Timestamp getTime_of_creation() {
@@ -103,8 +102,8 @@ public class Note{
         this.audio = audio;
     }
     
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setTime_of_creation(Timestamp time_of_creation) {

@@ -5,15 +5,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import ai.notiva.app.entities.Note;
+import ai.notiva.app.DTO.QuickNote;
 import java.util.List;
 
 public interface NoteRepository extends JpaRepository<Note, Long>{
 
     @Query(value = """
-    SELECT * FROM public.notes
-    WHERE user_id = :user_id
+        SELECT
+            id AS id,
+            notes_name AS notes_name, 
+            SUBSTRING(transcript FROM 1 FOR 50) || '...' AS transcript, 
+            time_of_creation AS time_of_creation, 
+            time_of_last_changes AS time_of_last_changes,
+            icon AS icon, 
+            is_favourite AS is_favourite
+        FROM public.notes
+        WHERE user_id = :user_id;
             """, nativeQuery = true)
-    List<Note> findByUser_id(@Param("user_id") Long user_id);
+    List<QuickNote> findQuickNoteByUser_id(@Param("user_id") Long user_id);
 
     @Query(value = """
     SELECT id, notes_name, summary, transcript, audio, user_id, time_of_creation, time_of_last_changes, icon, is_favourite, is_everyone_can_access
@@ -36,11 +45,27 @@ public interface NoteRepository extends JpaRepository<Note, Long>{
     List<Note> findNotesByUserIdAndTag(@Param("user_id") Long user_id, @Param("tag") String tag);
 
     @Query(value = """
-    SELECT * FROM public.notes
-    WHERE user_id = :user_id
-    AND is_favourite = true
-    ORDER BY notes_name;
-        """, nativeQuery = true)
-    List<Note> findNotesByUserIdAndFavourite(@Param("user_id") Long user_id);
+        SELECT 
+            id AS id,
+            notes_name AS notes_name, 
+            SUBSTRING(transcript FROM 1 FOR 50) || '...' AS transcript, 
+            time_of_creation AS time_of_creation, 
+            time_of_last_changes AS time_of_last_changes,
+            icon AS icon, 
+            is_favourite AS is_favourite
+        FROM public.notes
+        WHERE user_id = :user_id
+        AND is_favourite = true
+        ORDER BY notes_name;
+            """, nativeQuery = true)
+    List<QuickNote> findQuickFavouriteNotesByUserIdAndFavourite(@Param("user_id") Long user_id);
+
+    @Query(value = """
+        SELECT * FROM public.notes
+        WHERE id = :note_id
+        AND user_id = :user_id
+        LIMIT 1;
+            """, nativeQuery = true)
+    Note findNoteByIdAndUserId(@Param("user_id") Long user_id, @Param("note_id") Long note_id);
 
 }

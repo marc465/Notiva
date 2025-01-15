@@ -16,6 +16,10 @@
 	<string>notiva</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Need allowing for correct work</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Need allowing for correct work</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

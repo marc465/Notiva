@@ -29,5 +29,9 @@ public class Tag {
     public void setTag(String tag) {
         this.tag = tag;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     
 }

@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,9 +21,16 @@ public class Folder {
     @Column(name = "icon", nullable = false)
     private String icon;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long user;
+
+    public long getId() {
+        return id;
+    }
+    
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getFolder_name() {
         return folder_name;
@@ -43,12 +48,17 @@ public class Folder {
         this.icon = icon;
     }
     
-    public User getUser() {
+    public Long getUserId() {
         return user;
     }
     
-    public void setUser(User user) {
+    public void setUserId(Long user) {
         this.user = user;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Folder{id: %d, folder_name: '%s', icon: '%s', user_id: %d}", id, folder_name, icon, user);
     }
     
 }

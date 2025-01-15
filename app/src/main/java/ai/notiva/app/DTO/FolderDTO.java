@@ -1,16 +1,19 @@
 package ai.notiva.app.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class FolderDTO {
-    private String folder_name;
+    private String folderName;
     private String icon;
-    private long user_id;
+    @JsonProperty("idOfNotesInFolder")
+    private long[] idOfNotesInFolder;
     
-    public String getFolder_name() {
-        return folder_name;
+    public String getfolderName() {
+        return folderName;
     }
     
-    public void setFolder_name(String folder_name) {
-        this.folder_name = folder_name;
+    public void setfolderName(String folderName) {
+        this.folderName = folderName;
     }
     
     public String getIcon() {
@@ -20,13 +23,18 @@ public class FolderDTO {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-    
-    public long getUser_id() {
-        return user_id;
+
+    public long[] getNotesInFolder() {
+        return idOfNotesInFolder;
     }
     
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setNotesInFolder(long[] notesList) {
+        this.idOfNotesInFolder = notesList;
     }
-    
+
+    @Override
+    public String toString() {
+        return String.format("Folder{folderName: '%s', icon: '%s', notesInFolder: %s}", folderName, icon, idOfNotesInFolder.toString());
+    }
+
 }

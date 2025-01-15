@@ -63,5 +63,42 @@ public class ServiceLayer {
         return true;
     }
 
+    public long[] validateRanges(String range, long fileLength) {
+        long start;
+        long end;
+        // Calculate max allowed range (3 minutes of audio)
+        // Assuming 128 kbps audio
+        long maxRange = (48000 * 90) / 8; // 1.5 minute = 90 seconds
+
+        String[] ranges = range.replace("bytes=", "").split("-");
+        try {
+            start = Long.parseLong(ranges[0]);
+            if (start >= fileLength || start < 0) {
+                start = 0;
+            }
+            
+            long requestedEnd = ranges.length > 1 && !ranges[1].isEmpty() 
+                ? Long.parseLong(ranges[1])
+                : Math.min(start + maxRange, fileLength);
+
+            if (requestedEnd < 0) {
+                requestedEnd *= -1;
+            }
+                
+            end = Math.min(
+                Math.min(start + maxRange, fileLength), 
+                requestedEnd
+            );
+
+            System.out.println("returning values are:" + start + " " + end);
+            return new long[] {start, end};
+
+        } catch (NumberFormatException e) {
+            start = 0;
+            end = Math.min(fileLength, start + maxRange);
+
+            return new long[] {start, end};
+        }
+    }
 
 }
