@@ -3,23 +3,36 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  final FlutterSecureStorage secureStorage;
+
+  const SignUpScreen({super.key, required this.secureStorage});
 
   @override
   State<StatefulWidget> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
+  late SharedPreferences prefs;
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  Future<void> _handleLogin(String username, String password, String email) async {
+  @override
+  void initState() {
+    super.initState();
+    initPreferences();
+  }
+
+  Future<void> initPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  Future<void> _handleSignup(String username, String password, String email) async {
 
     try {
       final response = await http.post(
@@ -35,27 +48,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       
       if (response.statusCode == 200) {
-        final responseTwo = await http.post(
-          Uri.parse("http://localhost:8080/login"),
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: jsonEncode({
-              'username': username,
-              'password': password
-          }),
-        );
+        final access_token = response.headers['access_token'];
+        final refresh_token = response.headers['set-cookie'];
 
-        if (responseTwo.statusCode == 200) {
-        final accesstoken = responseTwo.headers['access_token'];
-        final cookieHeader = responseTwo.headers['set-cookie'];
-      
-        await _secureStorage.write(key: "access_token", value: accesstoken);
-        await _secureStorage.write(key: 'refresh_token', value: cookieHeader);
-      
+        await _secureStorage.write(key: 'refsesh_token', value: refresh_token);
+        await _secureStorage.write(key: 'access_token', value: access_token);
+
         Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(secureStorage: _secureStorage)));
-        }
-
       }
       else {
         print(response.statusCode);
@@ -226,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 30),
 
-                // Login Button
+                // Signup Button
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 32),
                   width: double.infinity,
@@ -275,7 +274,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           print("Email format is invalid.");
                           break;
                         case 10:
-                          _handleLogin(username, password, email);
+                          _handleSignup(username, password, email);
                           break;
                         default:
                           print("An unknown error occurred.");

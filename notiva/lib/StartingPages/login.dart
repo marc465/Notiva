@@ -3,20 +3,34 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final FlutterSecureStorage secureStorage;
+
+  const LoginScreen({super.key, required this.secureStorage});
 
   @override
   State<StatefulWidget> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  late SharedPreferences prefs;
+  late FlutterSecureStorage _secureStorage;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _secureStorage = widget.secureStorage;
+    initPreferences();
+  }
+
+  Future<void> initPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   Future<void> _handleLogin(String username, String password) async {
 
@@ -34,12 +48,14 @@ class _LoginScreenState extends State<LoginScreen> {
       
       if (response.statusCode == 200) {
         final accesstoken = response.headers['access_token'];
-        final cookieHeader = response.headers['set-cookie'];
+        final refresh_token = response.headers['set-cookie'];
       
         await _secureStorage.write(key: "access_token", value: accesstoken);
-        await _secureStorage.write(key: 'refresh_token', value: cookieHeader);
+        await _secureStorage.write(key: 'refresh_token', value: refresh_token);
+
+        prefs.setBool('is_logged_out', false);
       
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(secureStorage: _secureStorage)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(secureStorage: _secureStorage)));
       }
       else {
         print(response.statusCode);

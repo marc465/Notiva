@@ -60,8 +60,8 @@ class Note {
     return Note(
       id: json['id'],
       notesName: json['notes_name'],
-      summary: json['summary'],
-      transcript: json['transcript'],
+      summary: json['summary_jsonb'],
+      transcript: json['transcript_jsonb'],
       userId: json['userId'],
       timeOfCreation: DateTime.parse(json['time_of_creation']),
       timeOfLastChanges: DateTime.parse(json['time_of_last_changes']),

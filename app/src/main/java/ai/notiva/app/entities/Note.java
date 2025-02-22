@@ -1,13 +1,18 @@
 package ai.notiva.app.entities;
 
 import java.sql.Timestamp;
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "notes")
-public class Note{
-
+public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +26,15 @@ public class Note{
     @Column(name = "transcript", nullable = false)
     private String transcript;
 
-    @Column(name = "audio", nullable = false)
+    @Column(name = "summary_jsonb", columnDefinition = "jsonb", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
+    private String summary_jsonb;
+
+    @Column(name = "transcript_jsonb", columnDefinition = "jsonb", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
+    private String transcript_jsonb;
+
+    @Column(name = "audio", nullable = true)
     private String audio;
 
     @Column(name = "user_id", nullable = false)
@@ -41,90 +54,4 @@ public class Note{
 
     @Column(name = "is_everyone_can_access", nullable = false)
     private boolean is_everyone_can_access;
-
-    public Long getId() {
-        return id;
-    };
-
-    public String getNotes_name() {
-        return notes_name;
-    };
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public String getTranscript() {
-        return transcript;
-    }
-
-    public String getAudio() {
-        return audio;
-    }
-    
-    public Long getUserId() {
-        return userId;
-    }
-
-    public Timestamp getTime_of_creation() {
-        return time_of_creation;
-    }
-
-    public Timestamp getTime_of_last_changes() {
-        return time_of_last_changes;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public boolean getIsFavourite() {
-        return is_favourite;
-    }
-
-    public boolean getIsEveryoneCanAccess() {
-        return is_everyone_can_access;
-    }
-
-    public void setNotes_name(String notes_name) {
-        this.notes_name = notes_name;
-    };
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public void setTranscript(String transcript) {
-        this.transcript = transcript;
-    }
-
-    public void setAudio(String audio) {
-        this.audio = audio;
-    }
-    
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setTime_of_creation(Timestamp time_of_creation) {
-        this.time_of_creation = time_of_creation;
-    }
-
-    public void setTime_of_last_changes(Timestamp time_of_last_changes) {
-        this.time_of_last_changes = time_of_last_changes;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public void setIsFavourite(boolean is_favourite) {
-        this.is_favourite = is_favourite;
-    }
-
-    public void setIsEveryoneCanAccess(boolean is_everyone_can_access) {
-        this.is_everyone_can_access = is_everyone_can_access;
-    }
-
 }
-

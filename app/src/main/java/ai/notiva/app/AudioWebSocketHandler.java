@@ -26,6 +26,7 @@ public class AudioWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
+        System.out.println("in websocket");
         System.out.println(session.getId());
         try {
             String[] temp = session.getUri().toString().split("/");

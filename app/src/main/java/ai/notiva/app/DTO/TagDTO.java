@@ -2,30 +2,22 @@ package ai.notiva.app.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class TagDTO {
     private String tag;
+
     @JsonProperty("idOfNotesInTag")
     private long[] idOfNotesInTag;
-    
-    public String getTag() {
-        return tag;
-    }
-    
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
-    public long[] getNotesInTag() {
-        return idOfNotesInTag;
-    }
-    
-    public void setNotesInTag(long[] notesList) {
-        this.idOfNotesInTag = notesList;
-    }
+    private int count_notes;
 
     @Override
     public String toString() {
-        return String.format("Tag{tag: '%s', notesInTag: %s}", tag, idOfNotesInTag.toString());
+        return String.format("Tag{tag: '%s', notesInTag: %s, count_notes: %d}", tag, idOfNotesInTag.toString(), count_notes);
     }
 
 }

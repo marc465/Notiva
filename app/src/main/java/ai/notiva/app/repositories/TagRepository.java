@@ -40,7 +40,7 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
     @Query(value = """
     SELECT id, tag
     FROM public.tags t
-    INNER JOIN public.tags_users tu ON t.id = tu.tag_id
+        INNER JOIN public.tags_users tu ON t.id = tu.tag_id
     WHERE user_id = :user_id
     AND search @@ phraseto_tsquery(':query')
     ORDER BY ts_rank(search, phraseto_tsquery(':query')) desc;
@@ -62,5 +62,16 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
         AND n.user_id = :user_id
             """, nativeQuery = true)
     List<QuickNote> findNotesByTagIdAndUserId(@Param("user_id") Long user_id, @Param("tag_id") Long tag_id);
+
+    @Query(value = """
+        SELECT 
+            t.id as id, 
+            t.tag as tag 
+        FROM tags t
+            INNER JOIN tags_users tu on t.id = tu.tag_id
+        WHERE tu.user_id = :user_id
+        AND t.id = :tag_id
+            """, nativeQuery = true)
+    Tag findByTagIdAndUserId(@Param("user_id") Long user_id, @Param("tag_id") Long tag_id);
  
 }

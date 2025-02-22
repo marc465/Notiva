@@ -24,6 +24,9 @@ Future<StreamAudioResponse> request([int? start, int? end]) async {
   });
 
   print(response.statusCode);
+  print(response.headers);
+  print(response.body);
+
   
   return StreamAudioResponse(
       sourceLength: _contentLength ?? -1,

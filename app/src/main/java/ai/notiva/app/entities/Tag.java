@@ -6,7 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tags")
 public class Tag {
@@ -17,21 +21,8 @@ public class Tag {
 
     @Column(name = "tag", nullable = false)
     private String tag;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    
+    // @Column(name = "count_notes", nullable = false)
+    // private int count_notes;
     
 }
